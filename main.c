@@ -1,64 +1,85 @@
 #include "calc.h"
 
-bool check_invalid_argv(char *argv);
+int check_invalid_number(char *argv);
+int check_invalid_operator(char *argv);
 
 int main(int argc, char **argv)
 {
-    float num1;
-    float num2;
     float result;
+    float num;
+    int num_index;
+    int ope_index;
 
-    if (argc != 4)
+    if (argc % 2 != 0)
     {
         printf("Error: Insufficient number of arguments.\n");
-        printf("Sorry, I am still only up to two numbers.\n");
         printf("Examples of Use: 10 + 20\n");
         return (1);
     }
-    if (check_invalid_argv(argv[1]) && check_invalid_argv(argv[3]))
+
+    num_index = 1;
+    while (num_index < argc)
     {
-        printf("Error: The first number and second number are invalid number.\n");
-        return (1);
-    }
-    if (check_invalid_argv(argv[1]))
-    {
-        printf("Error: The first number is invalid number.\n");
-        return (1);
-    }
-    if (check_invalid_argv(argv[3]))
-    {
-        printf("Error: The second number is invalid number.\n");
-        return (1);
-    }
-    if (*argv[2] != '+' && *argv[2] != '-' && *argv[2] != 'x' && *argv[2] != '/' || strlen(argv[2]) != 1)
-    {
-        printf("Error: Invalid operator.\n");
-        printf("Can use operator: +  -  x  /\n");
-        return (1);
-    }
-    if (*argv[2] == '/' && *argv[3] == '0')
-    {
-        printf("Error: Cannot be divided by zero.\n");
-        return (1);
+        if (check_invalid_number(argv[num_index]))
+        {
+            printf("Error: The number of position %d is invalid number.\n", num_index / 2 + 1);
+            return (1);
+        }
+        num_index += 2;
     }
 
-    printf("%s\n", argv[2]);
+    ope_index = 2;
+    while (ope_index < argc - 1)
+    {
+        if (check_invalid_operator(argv[ope_index]))
+        {
+            printf("Error: The operator of position %d is invalid.\n", ope_index / 2);
+            return (1);
+        }
+        ope_index += 2;
+    }
 
-    num1 = atof(argv[1]);
-    num2 = atof(argv[3]);
-    result = solve(num1, num2, *argv[2]);
+    num_index = 3;
+    ope_index = 2;
+    while (num_index < argc)
+    {
+        if (*argv[num_index] == '0' && *argv[ope_index] == '/')
+        {
+            printf("Error: Cannot be divided by zero.\n");
+            printf("Fix number of potion %d or operator of potion %d.\n", num_index / 2 + 1, ope_index / 2);
+            return (1);
+        }
+        num_index += 2;
+        ope_index += 2;
+    }
+
+    num_index = 3;
+    ope_index = 2;
+    result = atof(argv[1]);
+    while (num_index < argc)
+    {
+        num = atof(argv[num_index]);
+        result = solve(result, num, *argv[ope_index]);
+        num_index += 2;
+        ope_index += 2;
+    }
     printf("result is %f\n", result);
-
-    return (0);
 }
 
-bool check_invalid_argv(char *argv)
+int check_invalid_number(char *argv)
 {
     while (*argv != '\0')
     {
-        if (*argv <= '0' || '9' <= *argv)
-            return (true);
+        if (*argv < '0' || '9' < *argv)
+            return (1);
         argv++;
     }
-    return (false);
+    return (0);
+}
+
+int check_invalid_operator(char *argv)
+{
+    if (*argv != '+' && *argv != '-' && *argv != 'x' && *argv != '/' || strlen(argv) != 1)
+        return (1);
+    return (0);
 }
