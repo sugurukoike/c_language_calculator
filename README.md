@@ -5,6 +5,7 @@
 
 # Demo
 
+
 # Feature
 Makefile と ヘッダーファイル（calc.h）を勉強のために書きました。make all, make clean, make fclean, make re コマンドに対応しています。
 
