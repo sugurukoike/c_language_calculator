@@ -18,5 +18,5 @@ C言語の実行環境
 git clone https://github.com/sugurukoike/c_language_calculator.git
 cd c_language_calculator
 make all
-./calc num_1 + num_2 x ... + num_n
+./calc num_1 + num_2 x num_3 - num_4 / num_5... + num_n
 ```
